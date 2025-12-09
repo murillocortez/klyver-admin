@@ -43,7 +43,11 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         // Priority: query param > params.slug
         // Priority: query param > params.slug > env default
         // @ts-ignore
-        const slug = searchParams.get('tenant') || params.slug || import.meta.env.VITE_DEFAULT_TENANT_SLUG_ADMIN;
+        // Priority logic expanded to catch global location search
+        const slug = searchParams.get('tenant') ||
+            new URLSearchParams(window.location.search).get('tenant') ||
+            params.slug ||
+            import.meta.env.VITE_DEFAULT_TENANT_SLUG_ADMIN;
         if (!slug) {
             setLoading(false);
             return;
