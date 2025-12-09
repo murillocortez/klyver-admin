@@ -104,6 +104,7 @@ export interface OrderItem {
   // PDV specific
   originalPrice?: number;
   discountApplied?: number;
+  image_url?: string;
 }
 
 export interface Order {
@@ -125,6 +126,9 @@ export interface Order {
   amountPaid?: number;
   changeAmount?: number;
   cashierId?: string;
+  // Extra fields for receipts
+  customerCpf?: string;
+  discountAmount?: number;
 }
 
 export interface Customer {

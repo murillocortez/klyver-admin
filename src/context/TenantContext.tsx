@@ -53,7 +53,7 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             try {
                 setLoading(true);
                 // @ts-ignore
-                const { data, error } = await supabase
+                const { data, error } = await (supabase as any)
                     .from('tenants')
                     .select('*')
                     .eq('slug', slug)

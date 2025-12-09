@@ -44,7 +44,7 @@ export const quotationService = {
             .single();
 
         if (error) throw error;
-        return data;
+        return data as any;
     },
 
     async updateStatus(id: string, status: string) {
@@ -78,7 +78,7 @@ export const quotationService = {
             const { error } = await supabase
                 .from('quotation_items' as any)
                 .update({ quantity_requested: qty })
-                .eq('id', existing.id);
+                .eq('id', (existing as any).id);
             if (error) throw error;
         } else {
             const { error } = await supabase
@@ -125,7 +125,7 @@ export const quotationService = {
                     delivery_days: delivery,
                     payment_terms: payment
                 })
-                .eq('id', existing.id);
+                .eq('id', (existing as any).id);
             if (error) throw error;
         } else {
             const { error } = await supabase

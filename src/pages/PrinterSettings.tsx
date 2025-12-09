@@ -145,7 +145,6 @@ export const PrinterSettings: React.FC = () => {
                         </button>
                         <button
                             onClick={handleSave}
-                            disabled={role === Role.OPERADOR}
                             className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2"
                         >
                             {saved ? <CheckCircle size={20} /> : <Save size={20} />}

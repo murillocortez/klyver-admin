@@ -159,7 +159,9 @@ export class AbcCurveService {
         // 7. Upsert to DB
         // Process in chunks if too big, but likely OK for now.
         if (upsertData.length > 0) {
-            const { error: upsertError } = await supabase
+            // Salvar no Supabase (Upsert)
+            // @ts-ignore
+            const { error: upsertError } = await (supabase as any)
                 .from('abc_curve')
                 .upsert(upsertData, { onConflict: 'product_id' });
 

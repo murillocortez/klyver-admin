@@ -132,7 +132,7 @@ export const Settings: React.FC = () => {
         setSettings({
             ...settings,
             [section]: {
-                ...settings[section as any],
+                ...(settings[section as keyof AppSettings] as any),
                 [field]: value
             }
         });

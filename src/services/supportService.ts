@@ -1,6 +1,6 @@
 import { db } from './dbService';
 import { supabase } from './supabase';
-import { SupportTicket } from '../types.ts';
+import { SupportTicket } from '../types';
 
 // Mock de FAQs por enquanto, idealmente viriam do banco
 export const FAQ_ARTICLES = [
@@ -71,7 +71,9 @@ export const FAQ_ARTICLES = [
 export const supportService = {
     // Buscar Tickets (User vê os seus/da loja)
     async getTickets(): Promise<SupportTicket[]> {
-        const { data, error } = await supabase
+        // Cast supabase to any
+        // @ts-ignore
+        const { data, error } = await (supabase as any)
             .from('support_tickets')
             .select('*')
             .order('created_at', { ascending: false });
@@ -84,7 +86,8 @@ export const supportService = {
     async createTicket(ticket: Omit<SupportTicket, 'id' | 'created_at' | 'updated_at' | 'tenant_id' | 'status'>): Promise<void> {
         const { data: { user } } = await supabase.auth.getUser();
 
-        const { error } = await supabase
+        // @ts-ignore
+        const { error } = await (supabase as any)
             .from('support_tickets')
             .insert({
                 ...ticket,

@@ -187,7 +187,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <div className={`flex ${isSidebarCollapsed ? 'flex-col items-center py-6 gap-6' : 'items-center justify-between p-6'} mb-2 transition-all duration-300`}>
           <div className={`flex items-center ${isSidebarCollapsed ? 'justify-center' : 'space-x-3'}`}>
             {tenant?.logo_url ? <img src={tenant.logo_url} alt="Logo" className="w-9 h-9 object-contain" /> : <div className="w-9 h-9 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20 shrink-0">{tenant?.display_name?.charAt(0).toUpperCase() || settings?.pharmacy?.name?.charAt(0).toUpperCase() || 'F'}</div>}
-            {!isSidebarCollapsed && <div className="overflow-hidden"><span className="block text-sm font-bold text-gray-900 leading-tight truncate">{tenant?.display_name || settings?.pharmacy?.name || 'PharmaDash'}</span><div className="mt-1"><PlanBadge plan={tenant?.plan_code || 'free'} /></div></div>}
+            {!isSidebarCollapsed && <div className="overflow-hidden"><span className="block text-sm font-bold text-gray-900 leading-tight truncate">{tenant?.display_name || settings?.pharmacy?.name || 'PharmaDash'}</span><div className="mt-1"><PlanBadge /></div></div>}
           </div>
           <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className={`text-gray-400 hover:text-primary transition-colors p-1.5 rounded-lg hover:bg-gray-100 ${isSidebarCollapsed ? 'bg-gray-50' : ''}`}>{isSidebarCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}</button>
         </div>

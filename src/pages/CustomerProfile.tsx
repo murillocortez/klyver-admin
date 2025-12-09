@@ -185,7 +185,7 @@ export const CustomerProfile: React.FC = () => {
         if (!customer) return;
         const newStatus = customer.status === 'active' ? 'blocked' : 'active';
         if (confirm(`Tem certeza que deseja ${newStatus === 'blocked' ? 'bloquear' : 'desbloquear'} este cliente?`)) {
-            const updatedCustomer = { ...customer, status: newStatus };
+            const updatedCustomer = { ...customer, status: newStatus as any };
             await db.updateCustomer(updatedCustomer);
             setCustomer(updatedCustomer);
         }

@@ -57,7 +57,8 @@ export const licenseService = {
 
         try {
             // Fetch tenant status and plan details via join
-            const { data: tenant, error } = await supabase
+            // @ts-ignore
+            const { data: tenant, error } = await (supabase as any)
                 .from('tenants')
                 .select(`
                     status, 

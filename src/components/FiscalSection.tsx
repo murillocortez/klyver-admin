@@ -19,7 +19,7 @@ export const FiscalSection: React.FC<FiscalSectionProps> = ({ order }) => {
     const { role } = useRole();
 
     // Permissions
-    const canEmit = role === 'ceo' || role === 'admin';
+    const canEmit = role === 'CEO' || role === 'ADMIN';
     // const canReprint = true; // All roles can reprint copies/view status
 
     const fetchData = async () => {

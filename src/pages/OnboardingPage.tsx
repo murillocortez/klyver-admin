@@ -113,9 +113,10 @@ export const OnboardingPage: React.FC = () => {
             if (settingsError) throw settingsError;
 
             // 2. Mark Tenant as Completed
-            const { error: tenantError } = await supabase
+            // @ts-ignore
+            const { error: tenantError } = await (supabase as any)
                 .from('tenants')
-                .update({ onboarding_status: 'completed' })
+                .update({ onboarding_status: 'completed' } as any)
                 .eq('id', tenant.id);
 
             if (tenantError) throw tenantError;

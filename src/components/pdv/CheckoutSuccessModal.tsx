@@ -84,7 +84,7 @@ export const CheckoutSuccessModal: React.FC<CheckoutSuccessModalProps> = ({ orde
                                         <p className="font-bold truncate">{item.productName}</p>
                                         <p className="text-xs text-gray-500">
                                             {item.quantity} x R$ {item.priceAtPurchase.toFixed(2)}
-                                            {item.discountApplied > 0 && ` (-R$ ${item.discountApplied.toFixed(2)})`}
+                                            {(item.discountApplied ?? 0) > 0 && ` (-R$ ${(item.discountApplied ?? 0).toFixed(2)})`}
                                         </p>
                                     </div>
                                     <p className="font-bold">R$ {(item.quantity * item.priceAtPurchase).toFixed(2)}</p>
@@ -97,10 +97,10 @@ export const CheckoutSuccessModal: React.FC<CheckoutSuccessModalProps> = ({ orde
                                 <span>Subtotal:</span>
                                 <span>R$ {(order.totalAmount + (order.discountAmount || 0)).toFixed(2)}</span>
                             </div>
-                            {order.discountAmount > 0 && (
+                            {(order.discountAmount ?? 0) > 0 && (
                                 <div className="flex justify-between text-green-600 font-bold">
                                     <span>Descontos:</span>
-                                    <span>- R$ {order.discountAmount.toFixed(2)}</span>
+                                    <span>- R$ {(order.discountAmount ?? 0).toFixed(2)}</span>
                                 </div>
                             )}
                             <div className="flex justify-between text-lg font-black mt-2">
@@ -114,10 +114,10 @@ export const CheckoutSuccessModal: React.FC<CheckoutSuccessModalProps> = ({ orde
                                 <span>Pagamento ({order.paymentMethod}):</span>
                                 <span>R$ {order.amountPaid?.toFixed(2)}</span>
                             </div>
-                            {order.changeAmount > 0 && (
+                            {(order.changeAmount ?? 0) > 0 && (
                                 <div className="flex justify-between">
                                     <span>Troco:</span>
-                                    <span>R$ {order.changeAmount.toFixed(2)}</span>
+                                    <span>R$ {(order.changeAmount ?? 0).toFixed(2)}</span>
                                 </div>
                             )}
                         </div>

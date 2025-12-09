@@ -242,7 +242,8 @@ export const MOCK_SETTINGS: AppSettings = {
     creditCardEnabled: true,
     debitCardEnabled: true,
     cashEnabled: true,
-    customInstructions: 'Entregador leva maquininha.'
+    customInstructions: 'Entregador leva maquininha.',
+    maxInstallments: 12
   },
   notifications: {
     lowStockAlert: true,
@@ -262,7 +263,8 @@ export const MOCK_SETTINGS: AppSettings = {
     inactivityDays: 0,
     minOrderCountMonthly: 0,
     minSpentMonthly: 0
-  }
+  },
+  enableHealthInsurance: true
 };
 
 export const MOCK_NOTIFICATIONS: AppNotification[] = [
