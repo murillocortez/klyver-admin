@@ -1,0 +1,7 @@
+{
+  "name": "PharmaDash",
+  "description": "A comprehensive administrative dashboard for pharmacy management, including inventory, orders, customers, and AI-powered tools.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
