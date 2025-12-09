@@ -137,17 +137,28 @@ export const licenseService = {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return null;
 
-        // Try to get from metadata first (faster)
+        // 1. Try to get from app_metadata (secure/admin set)
         if (user.app_metadata?.tenant_id) {
-            return user.app_metadata.tenant_id;
+            return user.app_metadata.tenant_id as string;
         }
 
-        const { data } = await supabase
+        // 2. Try to get from user_metadata (set on signup)
+        if (user.user_metadata?.tenant_id) {
+            return user.user_metadata.tenant_id as string;
+        }
+
+        // 3. Last resource: Fetch from profiles table
+        const { data, error } = await supabase
             .from('profiles')
             .select('tenant_id')
             .eq('id', user.id)
-            .single() as any;
+            .single();
 
+        if (error) {
+            console.warn('Could not fetch tenant_id from profiles:', error);
+        }
+
+        // @ts-ignore
         return data?.tenant_id || null;
     }
 };
