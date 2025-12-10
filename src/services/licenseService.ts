@@ -40,8 +40,8 @@ const PLAN_FEATURES: Record<string, any> = {
 };
 
 export const licenseService = {
-    async checkLicense(): Promise<LicenseStatus> {
-        const tenantId = await this.getTenantId();
+    async checkLicense(tenantIdOverride?: string): Promise<LicenseStatus> {
+        const tenantId = await this.getTenantId(tenantIdOverride);
 
         if (!tenantId) {
             console.error('Tenant ID não encontrado.');
@@ -130,7 +130,9 @@ export const licenseService = {
         }
     },
 
-    async getTenantId(): Promise<string | null> {
+    async getTenantId(override?: string): Promise<string | null> {
+        if (override) return override;
+
         // First try to check if we have tenant from URL context (if accessible)
         // But since this is a service, we rely on user profile or current session.
 

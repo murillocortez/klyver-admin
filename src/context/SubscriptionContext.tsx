@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { licenseService, LicenseStatus } from '../services/licenseService';
 import { useAuth } from './AuthContext';
+import { useTenant } from './TenantContext';
 
 interface SubscriptionContextType {
     license: LicenseStatus | null;
@@ -57,6 +58,7 @@ const BlockScreen = ({ license }: { license: LicenseStatus }) => (
 
 export const SubscriptionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { user } = useAuth();
+    const { tenant } = useTenant();
     const [license, setLicense] = useState<LicenseStatus | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -70,7 +72,8 @@ export const SubscriptionProvider: React.FC<{ children: React.ReactNode }> = ({ 
             try {
                 // If we are strictly following "30min within panel or re-login", re-login is handled by this useEffect running on mount.
                 // We add interval for the 30min check.
-                const data = await licenseService.checkLicense();
+                // PASS TENANT ID from URL Context as Override if Auth fails!
+                const data = await licenseService.checkLicense(tenant?.id);
                 setLicense(data);
             } catch (err) {
                 console.error("Falha ao verificar licença MASTER:", err);
@@ -85,7 +88,7 @@ export const SubscriptionProvider: React.FC<{ children: React.ReactNode }> = ({ 
         const intervalId = setInterval(check, 30 * 60 * 1000);
 
         return () => clearInterval(intervalId);
-    }, [user]);
+    }, [user, tenant]);
 
     const isFeatureEnabled = (feature: keyof LicenseStatus['features']) => {
         if (!license) return false;
