@@ -33,15 +33,24 @@ import { PurchasesPage } from './pages/purchasing/PurchasesPage';
 import { FinancialPage } from './pages/purchasing/FinancialPage';
 import { CashbackCRMPage } from './pages/CashbackCRMPage';
 
+import { AccessBlocker } from './components/AccessBlocker';
+import { useTenantAccessGuard } from './hooks/useTenantAccessGuard';
+
 // Protected Route Wrapper
 const ProtectedRoute: React.FC<{ children: React.ReactNode; requiredPermission?: string }> = ({ children, requiredPermission }) => {
   const { isAuthenticated, loading, user } = useAuth();
   const { canView } = useRole();
-  const { tenant } = useTenant(); // Get Tenant
+  const { tenant, isBlocked, blockedReason } = useTenantAccessGuard(); // Use Guard Hook
   const location = useLocation();
 
   if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
   if (!isAuthenticated) return <Navigate to="../login" replace relative="path" />;
+
+  // --- BLOCK CHECK ---
+  if (isBlocked && tenant) {
+    return <AccessBlocker tenant={tenant} reason={blockedReason || undefined} />;
+  }
+  // -------------------
 
   // --- ONBOARDING CHECK ---
   // If tenant is pending, FORCE onboarding, unless we are already there.
