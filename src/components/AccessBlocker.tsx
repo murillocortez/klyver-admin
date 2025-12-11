@@ -64,28 +64,33 @@ export const AccessBlocker: React.FC<AccessBlockerProps> = ({ tenant, reason }) 
                             Renovar Assinatura Agora
                         </button>
 
-                        Falar com Suporte
-                    </button>
+                        <button
+                            onClick={() => setIsSupportOpen(true)}
+                            className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold py-3.5 px-6 rounded-xl flex items-center justify-center transition-all mt-3"
+                        >
+                            <LifeBuoy className="w-5 h-5 mr-2" />
+                            Falar com Suporte
+                        </button>
 
-                    <button
-                        onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
-                        className="w-full text-slate-400 hover:text-slate-600 font-medium py-2 text-sm transition-colors"
-                    >
-                        Sair da conta e tentar outro usuário
-                    </button>
+                        <button
+                            onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
+                            className="w-full text-slate-400 hover:text-slate-600 font-medium py-2 text-sm transition-colors"
+                        >
+                            Sair da conta e tentar outro usuário
+                        </button>
+                    </div>
                 </div>
+
+                {
+                    isSupportOpen && (
+                        <SupportModal
+                            tenant={tenant}
+                            onClose={() => setIsSupportOpen(false)}
+                        />
+                    )
+                }
             </div>
         </div>
-
-            {
-        isSupportOpen && (
-            <SupportModal
-                tenant={tenant}
-                onClose={() => setIsSupportOpen(false)}
-            />
-        )
-    }
-        </div >
     );
 };
 

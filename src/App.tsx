@@ -1,37 +1,40 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { TenantRoot } from './components/TenantRoot';
-import { Dashboard } from './pages/Dashboard';
-import { ProductList } from './pages/ProductList';
-import { OrderList } from './pages/OrderList';
-import { CustomerList } from './pages/CustomerList';
-import { CustomerProfile } from './pages/CustomerProfile';
-import { Reports } from './pages/Reports';
-import { CMEDMonitor } from './pages/CMEDMonitor';
-import { PDV } from './pages/PDV';
-import { Settings } from './pages/Settings';
-import { Login } from './pages/Login';
-import { DailyOffersPage } from './pages/DailyOffersPage';
-import { AwaitingApproval } from './pages/AwaitingApproval';
-import { PlansPage } from './pages/PlansPage';
-import { SupportPage } from './pages/SupportPage';
-import { RestockPage } from './pages/RestockPage';
-import { OnboardingPage } from './pages/OnboardingPage';
+
+// Lazy Load Pages
+const Dashboard = React.lazy(() => import('./pages/Dashboard').then(module => ({ default: module.Dashboard })));
+const ProductList = React.lazy(() => import('./pages/ProductList').then(module => ({ default: module.ProductList })));
+const OrderList = React.lazy(() => import('./pages/OrderList').then(module => ({ default: module.OrderList })));
+const CustomerList = React.lazy(() => import('./pages/CustomerList').then(module => ({ default: module.CustomerList })));
+const CustomerProfile = React.lazy(() => import('./pages/CustomerProfile').then(module => ({ default: module.CustomerProfile })));
+const Reports = React.lazy(() => import('./pages/Reports').then(module => ({ default: module.Reports })));
+const CMEDMonitor = React.lazy(() => import('./pages/CMEDMonitor').then(module => ({ default: module.CMEDMonitor })));
+const PDV = React.lazy(() => import('./pages/PDV').then(module => ({ default: module.PDV })));
+const Settings = React.lazy(() => import('./pages/Settings').then(module => ({ default: module.Settings })));
+const Login = React.lazy(() => import('./pages/Login').then(module => ({ default: module.Login })));
+const DailyOffersPage = React.lazy(() => import('./pages/DailyOffersPage').then(module => ({ default: module.DailyOffersPage })));
+const AwaitingApproval = React.lazy(() => import('./pages/AwaitingApproval').then(module => ({ default: module.AwaitingApproval })));
+const PlansPage = React.lazy(() => import('./pages/PlansPage').then(module => ({ default: module.PlansPage })));
+const SupportPage = React.lazy(() => import('./pages/SupportPage').then(module => ({ default: module.SupportPage })));
+const RestockPage = React.lazy(() => import('./pages/RestockPage').then(module => ({ default: module.RestockPage })));
+const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage').then(module => ({ default: module.OnboardingPage })));
+const AbcCurvePage = React.lazy(() => import('./pages/AbcCurvePage').then(module => ({ default: module.AbcCurvePage })));
+const CRMAutomatedPage = React.lazy(() => import('./pages/CRMAutomatedPage').then(module => ({ default: module.CRMAutomatedPage })));
+const SuppliersPage = React.lazy(() => import('./pages/purchasing/SuppliersPage').then(module => ({ default: module.SuppliersPage })));
+const QuotationForm = React.lazy(() => import('./pages/purchasing/QuotationForm').then(module => ({ default: module.QuotationForm })));
+const PurchaseDetails = React.lazy(() => import('./pages/purchasing/PurchaseDetails').then(module => ({ default: module.PurchaseDetails })));
+const QuotationsPage = React.lazy(() => import('./pages/purchasing/QuotationsPage').then(module => ({ default: module.QuotationsPage })));
+const PurchasesPage = React.lazy(() => import('./pages/purchasing/PurchasesPage').then(module => ({ default: module.PurchasesPage })));
+const FinancialPage = React.lazy(() => import('./pages/purchasing/FinancialPage').then(module => ({ default: module.FinancialPage })));
+const CashbackCRMPage = React.lazy(() => import('./pages/CashbackCRMPage').then(module => ({ default: module.CashbackCRMPage })));
+
 import { Role } from './types';
 import { useRole } from './hooks/useRole';
 import { useAuth } from './context/AuthContext';
-import { useTenant } from './context/TenantContext'; // Import useTenant
+import { useTenant } from './context/TenantContext';
 import { ToastContainer } from './components/ToastContainer';
-import { AbcCurvePage } from './pages/AbcCurvePage';
-import { CRMAutomatedPage } from './pages/CRMAutomatedPage';
-import { SuppliersPage } from './pages/purchasing/SuppliersPage';
-import { QuotationForm } from './pages/purchasing/QuotationForm';
-import { PurchaseDetails } from './pages/purchasing/PurchaseDetails';
-import { QuotationsPage } from './pages/purchasing/QuotationsPage';
-import { PurchasesPage } from './pages/purchasing/PurchasesPage';
-import { FinancialPage } from './pages/purchasing/FinancialPage';
-import { CashbackCRMPage } from './pages/CashbackCRMPage';
 
 import { AccessBlocker } from './components/AccessBlocker';
 import { useTenantAccessGuard } from './hooks/useTenantAccessGuard';
@@ -131,54 +134,56 @@ const App: React.FC = () => {
     <>
       <ToastContainer />
       <Router>
-        <Routes>
-          {/* Default Redirect: Checks for ?tenant=slug or defaults to farmavida */}
-          <Route path="/" element={<RootRedirect />} />
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div></div>}>
+          <Routes>
+            {/* Default Redirect: Checks for ?tenant=slug or defaults to farmavida */}
+            <Route path="/" element={<RootRedirect />} />
 
-          <Route path="/:slug" element={<TenantRoot />}>
-            <Route path="login" element={<Login />} />
+            <Route path="/:slug" element={<TenantRoot />}>
+              <Route path="login" element={<Login />} />
 
-            {/* Onboarding Route - No Layout, Protected */}
-            <Route path="onboarding" element={<OnboardingRoute />} />
+              {/* Onboarding Route - No Layout, Protected */}
+              <Route path="onboarding" element={<OnboardingRoute />} />
 
-            <Route path="support" element={<ProtectedRoute><SupportPage /></ProtectedRoute>} />
-            <Route path="ofertas-do-dia" element={<DailyOffersPage />} />
-            <Route path="aguardando-aprovacao" element={<AwaitingApprovalRoute />} />
+              <Route path="support" element={<ProtectedRoute><SupportPage /></ProtectedRoute>} />
+              <Route path="ofertas-do-dia" element={<DailyOffersPage />} />
+              <Route path="aguardando-aprovacao" element={<AwaitingApprovalRoute />} />
 
-            <Route path="dashboard" element={<ProtectedRoute requiredPermission="dashboard"><Dashboard /></ProtectedRoute>} />
-            <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<ProtectedRoute requiredPermission="dashboard"><Dashboard /></ProtectedRoute>} />
+              <Route index element={<Navigate to="dashboard" replace />} />
 
-            <Route path="products" element={<ProtectedRoute requiredPermission="products"><ProductList /></ProtectedRoute>} />
-            <Route path="orders" element={<ProtectedRoute requiredPermission="orders"><OrderList /></ProtectedRoute>} />
-            <Route path="customers" element={<ProtectedRoute requiredPermission="customers"><CustomerList /></ProtectedRoute>} />
-            <Route path="admin/crm" element={<ProtectedRoute requiredPermission="customers"><CRMAutomatedPage /></ProtectedRoute>} />
-            <Route path="customers/:id" element={<ProtectedRoute requiredPermission="customers"><CustomerProfile /></ProtectedRoute>} />
-            <Route path="reports" element={<ProtectedRoute requiredPermission="reports"><Reports /></ProtectedRoute>} />
-            <Route path="settings" element={<ProtectedRoute requiredPermission="settings"><Settings /></ProtectedRoute>} />
-            <Route path="daily-offers" element={<ProtectedRoute requiredPermission="daily-offers"><DailyOffersPage /></ProtectedRoute>} />
-            <Route path="plans" element={<ProtectedRoute><PlansPage /></ProtectedRoute>} />
-            <Route path="admin/cmed-monitor" element={<ProtectedRoute><CMEDMonitor /></ProtectedRoute>} />
-            <Route path="admin/pdv" element={<ProtectedRoute><PDV /></ProtectedRoute>} />
+              <Route path="products" element={<ProtectedRoute requiredPermission="products"><ProductList /></ProtectedRoute>} />
+              <Route path="orders" element={<ProtectedRoute requiredPermission="orders"><OrderList /></ProtectedRoute>} />
+              <Route path="customers" element={<ProtectedRoute requiredPermission="customers"><CustomerList /></ProtectedRoute>} />
+              <Route path="admin/crm" element={<ProtectedRoute requiredPermission="customers"><CRMAutomatedPage /></ProtectedRoute>} />
+              <Route path="customers/:id" element={<ProtectedRoute requiredPermission="customers"><CustomerProfile /></ProtectedRoute>} />
+              <Route path="reports" element={<ProtectedRoute requiredPermission="reports"><Reports /></ProtectedRoute>} />
+              <Route path="settings" element={<ProtectedRoute requiredPermission="settings"><Settings /></ProtectedRoute>} />
+              <Route path="daily-offers" element={<ProtectedRoute requiredPermission="daily-offers"><DailyOffersPage /></ProtectedRoute>} />
+              <Route path="plans" element={<ProtectedRoute><PlansPage /></ProtectedRoute>} />
+              <Route path="admin/cmed-monitor" element={<ProtectedRoute><CMEDMonitor /></ProtectedRoute>} />
+              <Route path="admin/pdv" element={<ProtectedRoute><PDV /></ProtectedRoute>} />
 
-            <Route path="admin/configuracoes-fiscal" element={<Navigate to="../settings?tab=fiscal" replace relative="path" />} />
-            <Route path="admin/fiscal" element={<Navigate to="../settings?tab=fiscal" replace relative="path" />} />
+              <Route path="admin/configuracoes-fiscal" element={<Navigate to="../settings?tab=fiscal" replace relative="path" />} />
+              <Route path="admin/fiscal" element={<Navigate to="../settings?tab=fiscal" replace relative="path" />} />
 
-            <Route path="admin/curva-abc" element={<ProtectedRoute requiredPermission="reports"><AbcCurvePage /></ProtectedRoute>} />
+              <Route path="admin/curva-abc" element={<ProtectedRoute requiredPermission="reports"><AbcCurvePage /></ProtectedRoute>} />
 
-            <Route path="admin/suppliers" element={<ProtectedRoute><SuppliersPage /></ProtectedRoute>} />
-            <Route path="admin/quotations" element={<ProtectedRoute><QuotationsPage /></ProtectedRoute>} />
-            <Route path="admin/quotations/:id" element={<ProtectedRoute><QuotationForm /></ProtectedRoute>} />
-            <Route path="admin/purchases" element={<ProtectedRoute><PurchasesPage /></ProtectedRoute>} />
-            <Route path="admin/purchases/:id" element={<ProtectedRoute><PurchaseDetails /></ProtectedRoute>} />
-            <Route path="admin/financial" element={<ProtectedRoute><FinancialPage /></ProtectedRoute>} />
+              <Route path="admin/suppliers" element={<ProtectedRoute><SuppliersPage /></ProtectedRoute>} />
+              <Route path="admin/quotations" element={<ProtectedRoute><QuotationsPage /></ProtectedRoute>} />
+              <Route path="admin/quotations/:id" element={<ProtectedRoute><QuotationForm /></ProtectedRoute>} />
+              <Route path="admin/purchases" element={<ProtectedRoute><PurchasesPage /></ProtectedRoute>} />
+              <Route path="admin/purchases/:id" element={<ProtectedRoute><PurchaseDetails /></ProtectedRoute>} />
+              <Route path="admin/financial" element={<ProtectedRoute><FinancialPage /></ProtectedRoute>} />
 
-            <Route path="admin/reposicao" element={<ProtectedRoute><RestockPage /></ProtectedRoute>} />
+              <Route path="admin/reposicao" element={<ProtectedRoute><RestockPage /></ProtectedRoute>} />
 
-            <Route path="admin/crm/cashback" element={<ProtectedRoute><CashbackCRMPage /></ProtectedRoute>} />
+              <Route path="admin/crm/cashback" element={<ProtectedRoute><CashbackCRMPage /></ProtectedRoute>} />
 
-            <Route path="*" element={<Navigate to="dashboard" replace />} />
-          </Route>
-        </Routes>
+              <Route path="*" element={<Navigate to="dashboard" replace />} />
+            </Route>
+          </Routes>
+        </Suspense>
       </Router>
     </>
   );
